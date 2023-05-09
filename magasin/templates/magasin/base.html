@@ -1,0 +1,104 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<title>
+{% block title %} {% endblock %}
+</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<link rel='stylesheet' type='text/css' media='screen' href="{% static 'css/base.css'%}">
+{% block styles %} 
+<style>
+    /* Add styles for dark mode here */
+    body.dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+    .product-details.dark-mode {
+    border: 2px solid #fff;
+    }
+    
+    /* Hide the light mode button in dark mode */
+    .product-details.dark-mode .toggle-mode.light-mode {
+    display: none;
+    }
+    
+    /* Hide the dark mode button in light mode */
+    .product-details.light-mode .toggle-mode.dark-mode {
+    display: none;
+    }
+    </style>
+{% endblock %}
+</head>
+<body class="light-mode">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'index' %}"><img src="/static/assets/logo.png" style="width: 150%; max-width: 200px; height: auto;"></img></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Produits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'categorie_list' %}">Catégories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'fournisseur_list' %}">Fournisseurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'commande_list' %}">Commandes</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item active">
+                <a class="nav-link" href="#">{{user}},</a>
+                </li>
+                <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                </li>
+
+                {% else %}
+                <li class="nav-item active">
+                <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                </li>
+                <li class="nav-item active">
+                    <div>
+                        <small>
+                        Pas encore inscrit.e?
+                        <a href="{% url 'register' %}"> S'inscrire </a></div>
+                </li>
+                {% endif %}
+
+            </ul>
+            <form class="form-inline ml-auto" method="GET" action="{% url 'search' %}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher" name="q">
+                <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Rechercher</button>
+            </form>
+            {% comment %} <div class="form-inline ml-auto">
+                <button class="btn toggle-mode light-mode" onclick="toggleDarkMode()">Dark Mode</button>
+                <button class="btn toggle-mode dark-mode" onclick="toggleLightMode()">Light Mode</button>
+            </div>
+             {% endcomment %}
+             
+        </div>
+    </nav>
+    <script>
+        function toggleDarkMode() {
+            $('body').removeClass('light-mode');
+            $('body').addClass('dark-mode');
+        }
+        
+        function toggleLightMode() {
+            $('body').removeClass('dark-mode');
+            $('body').addClass('light-mode');
+        }        
+    </script>
+{% block content %}{% endblock %}
+</body>
+</html>
